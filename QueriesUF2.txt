@@ -295,3 +295,101 @@ INSERT INTO characters_items (id_character,id_item) VALUES (1,1),(1,3),(1,4),(2,
 Archivo amongmeme_tables
 
 04/12/2020
+SELECT items.id_item, items.item 
+FROM characters, characters_items, items 
+WHERE characters.id_character=characters_items.id_character AND items.id_item=characters_items.id_item 
+AND characters.id_character=1
+
+14/12/2020
+INSERT INTO characters_items (id_character, id_item)
+VALUES (1,1) ,(2,2) ,(3,1) ,(2,2);
+
+GROUP BY columna --- Agrupa todas las repeticiones en un resultado
+---Ejemplo
+SELECT * 
+FROM characters_items
+GROUP BY id_character
+
+---- Couenta las repeticiones id_item tiene
+SELECT id_character, id_item, COUNT(id_item)
+FROM characters_items
+GROUP BY id_character
+
+---
+SELECT id_character, id_item, COUNT(id_character)
+FROM characters_items
+WHERE id_item=1
+GROUP BY id_character
+
+---Canviar la columna de nombre
+SELECT id_character, id_item, COUNT(id_character) AS num_items
+FROM characters_items
+WHERE id_item=1
+
+
+
+SELECT 
+	characters_items.id_item, 
+	items.item, 
+	COUNT(characters_items.id_item) AS num_items
+FROM characters_items, items
+WHERE items.id_item=characters_items.id_item
+GROUP BY characters_items.id_item
+
+18/12/2020
+---Joins LEFT JOIN, RIGHT JOIN, INNER JOIN solo son usablesd
+si las tables de donde se recogen los resultados estan relacionadas con Foreign Keys.
+---Select con INNER JOIN
+SELECT *
+FROM `characters`
+INNER JOIN `stats`
+ON characters.id_character = stats.id_character
+
+---INNER JOIN con weapons y su tipo
+SELECT weapons.id_weapon, weapons.weapon, weapons_types.type
+FROM `weapons_types`
+INNER JOIN `weapons`
+	ON weapons_types.id_weapon_type=weapons.id_weapon_type
+
+
+SELECT items.id_item, items.item, items_types.type
+FROM `items_types`
+LEFT JOIN `items`
+	ON items_types.id_item_type=items.id_item_type
+    ORDER BY items.id_item
+
+
+---Insert type y update guijarro a municion
+INSERT INTO items_types (type) VALUES ("Especial"),("Munición");
+
+UPDATE items
+	SET id_item_type=6
+	WHERE id_item=3
+
+---Ejercicio JOINS
+SELECT characters.name, items.item
+FROM characters
+INNER JOIN characters_items
+	ON characters.id_character=characters_items.id_character
+INNER JOIN items
+	ON items.id_item=characters_items.id_item
+
+SELECT characters.name, items.item
+FROM characters
+LEFT JOIN characters_items
+	ON characters.id_character=characters_items.id_character
+LEFT JOIN items
+	ON items.id_item=characters_items.id_item
+
+SELECT characters.name, items.item
+FROM characters
+LEFT JOIN characters_items
+	ON characters.id_character=characters_items.id_character
+RIGHT JOIN items
+
+SELECT characters.name, items.item
+FROM characters
+LEFT JOIN characters_items
+	ON characters.id_character=characters_items.id_character
+INNER JOIN items
+	ON items.id_item=characters_items.id_item
