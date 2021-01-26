@@ -393,3 +393,98 @@ LEFT JOIN characters_items
 	ON characters.id_character=characters_items.id_character
 INNER JOIN items
 	ON items.id_item=characters_items.id_item
+
+12/01/2021
+Funciones de SQL Predefinidas como MAX(columna)
+
+15/01/2021
+SET lc_time_names='es_ES'
+SELECT DAYNAME('2021-01-15'), MONTHNAME('2021-01-13')
+lc Varables locale traduccion del sitio en question
+
+SET @reshulon_xd := 17; Inicalizar una variable
+SET @reshulon_xd = 3; Setea la variable a un valor
+
+Procedure NO retorna valor
+Function SI retorna valor
+
+19/01/2021
+DELIMITER ;
+DROP PROCEDURE IF EXISTS getItemNameById;
+DELIMITER $$
+CREATE PROCEDURE getItemNameById (IN iditem INT, OUT name VARCHAR(16))
+	BEGIN
+    	SELECT item INTO name FROM items 
+        WHERE id_item=iditem;
+    END$$
+DELIMITER ;
+
+CALL getItemNameById(3, @item);
+
+SELECT @item
+
+-----Get items by character id PROCEDURE
+DROP PROCEDURE IF EXISTS getItemsByCharacterId;
+DELIMITER $$
+
+CREATE PROCEDURE getItemsByCharacterId(IN in_id_character INT UNSIGNED, 
+                                       OUT out_id_item INT UNSIGNED,
+                                      	OUT out_item VARCHAR (24),
+                                        OUT out_cost INT)
+BEGIN
+	SELECT items.id_item, items.id_item, items.cost INTO out_id_item,out_item,out_cost
+	FROM characters
+	LEFT JOIN characters_items
+		ON characters.id_character=characters_items.id_character
+	LEFT JOIN items
+		ON items.id_item=characters_items.id_item
+    WHERE characters.id_character=in_id_character;
+END$$
+
+DELIMITER ;
+
+CALL getItemsByCharacterId(1, @iditem, @item, @cost);
+
+SELECT @idtem, @item, @cost;
+---------------------------------------------------------
+
+DROP PROCEDURE IF EXISTS getItemsByCharacterId;
+DELIMITER $$
+
+CREATE PROCEDURE getItemByCharacterId(IN in_id_character INT UNSIGNED, 
+                                       OUT out_id_item INT UNSIGNED,
+                                      	OUT out_item VARCHAR (24),
+                                        OUT out_cost INT)
+BEGIN
+	SELECT items.id_item, items.id_item, items.cost INTO out_id_item,out_item,out_cost
+	FROM characters
+	LEFT JOIN characters_items
+		ON characters.id_character=characters_items.id_character
+	LEFT JOIN items
+		ON items.id_item=characters_items.id_item
+    WHERE characters.id_character=in_id_character
+    LIMIT 1;
+END$$
+
+DELIMITER ;
+
+CALL getItemsByCharacterId(1, @iditem, @item, @cost);
+
+SELECT @idtem, @item, @cost;
+
+--------------BUCLES-------------------------------
+DELIMITER $$
+
+CREATE PROCEDURE doiterate(p1 INT)
+BEGIN
+	label1: LOOP	
+    	SET p1 = p1 + 1;
+        IF p1 < 10 THEN
+        	ITERATE label1;
+        END IF;
+        LEAVE label1;
+    END LOOP label1;
+    SET @x = p1;
+END$$
+
+DELIMITER ;
