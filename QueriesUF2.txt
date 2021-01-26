@@ -488,3 +488,56 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+26/01/2021
+---Procedure Insertitem
+---id personaje, id item i inserte en la tabla characters_items items
+
+DROP PROCEDURE IF EXISTS relate_character_item;
+
+DELIMITER $$
+
+CREATE PROCEDURE relate_character_item (IN in_id_character INT UNSIGNED, IN in_id_item INT UNSIGNED)
+BEGIN
+	INSERT INTO characters_items(id_character, id_item) VALUES(in_id_character, in_id_item);
+END$$
+
+DELIMITER ;
+
+CALL relate_character_item(1, 5);
+
+SELECT * FROM characters_items;
+
+---Function Insert Item
+---Parametros todos menos image, description
+
+
+DELIMITER $$
+
+CREATE FUNCTION insert_item(in_item VARCHAR(24), 
+			in_cost INT, in_consumable BOOLEAN, 
+			in_tradeable BOOLEAN, in_weight FLOAT, 
+			in_id_item_type INT UNSIGNED)RETURNS INT UNSIGNED
+BEGIN
+	INSERT INTO items(item, cost, consumable, tradeable, weight, id_item_type) 
+	VALUES(in_item, in_cost, in_consumable, in_tradeable, in_weight, in_id_item_type);
+	RETURN LAST_INSERT_ID();
+END$$
+
+DELIMITER ;
+
+SELECT insert_item('Rotulador, Verde', 100, FALSE, TRUE, 1000, 2);
+
+---Function id_item_by_name('Llave'); 
+Pasad un nombre de item retorne 
+DELIMITER $$
+CREATE FUNCTION id_item_by_name(in_item VARCHAR(24)) RETURNS INT UNSIGNED 
+BEGIN
+	SET @id := 0;
+	SELECT id_item INTO @id FROM items WHERE item LIKE in_item LIMIT 1;
+	RETURN @id;
+END$$
+
+DELIMITER ;
+
+---Function   pasar una palabra i que retorne el id

@@ -18,6 +18,10 @@ DROP TABLE IF EXISTS skills;
 
 DROP TABLE IF EXISTS characters;
 
+/* Procedures de AmogMeme */
+
+
+/* Creacion de tablas */
 CREATE TABLE characters(
 	id_character INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(24) NOT NULL,
@@ -82,6 +86,8 @@ CREATE TABLE items(
     id_item_type INT UNSIGNED NOT NULL,
 	FOREIGN KEY (id_item_type) REFERENCES items_types(id_item_type)
 );
+
+/* Inserts de datos */
 INSERT INTO items (item,cost,consumable,tradeable,weight,image,description,id_item_type)
 VALUES("Poción de vida", 25, true, true, 0.2, "health_potion.png", "Una poción que recupera vida", 3),
 	("Gafas de sol", 100, false, true, 0.1, "sunglasses.png", "Gafas de sol facheritas", 2),
@@ -165,3 +171,4 @@ CREATE TABLE characters_armours(
 	FOREIGN KEY (id_character) REFERENCES characters(id_character),
 	FOREIGN KEY (id_armour) REFERENCES armours(id_armour)
 );
+
