@@ -541,3 +541,44 @@ END$$
 DELIMITER ;
 
 ---Function   pasar una palabra i que retorne el id
+29/01/2021
+INSERT INTO characters (name)
+VALUES ('Ned Stark');
+INSERT INTO characters_items (id_character, id_item)
+VALUES (5,3);
+DELETE FROM `characters` 
+WHERE id_character=5;
+---Da Error por la foreign Key on RESTRICT
+---Sentencia ALTER TABLE canviar tabla , Foreign Keys
+DELETE otra vez
+se borra la relacion en characters items
+---insertamos otra vez Ned Satark
+--INsertamos relaciones con el character id 6
+INSERT INTO characters_items (id_character, id_item)
+VALUES (6,3);
+INSERT INTO characters_weapons (id_character, id_weapon)
+VALUES (6,3);
+
+---Procedimiento un personaje
+DROP PROCEDURE IF EXISTS delete_character;
+
+DELIMITER $$
+
+CREATE PROCEDURE delete_character (IN in_id_character INT UNSIGNED)
+BEGIN
+	DELETE FROM `characters_items` WHERE id_character=in_id_character;
+	DELETE FROM `characters_weapons` WHERE id_character=in_id_character;
+	DELETE FROM `characters_armours` WHERE id_character=in_id_character;
+	DELETE FROM `characters` WHERE id_character=in_id_character;
+END$$
+
+DELIMITER ;
+
+CALL delete_character(6);
+
+---Añadir una columna a la tabla stats happines
+ALTER TABLE stats 
+ADD felicidad INT;
+--- poner a happines
+ALTER TABLE stats
+RENAME COLUMN felicidad TO joy;

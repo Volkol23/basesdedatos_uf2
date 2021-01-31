@@ -1,4 +1,5 @@
 /* Tablas de AmongMeme */
+CREATE DATABASE amongmeme2;
 
 DROP TABLE IF EXISTS characters_items;
 DROP TABLE IF EXISTS items;
@@ -58,6 +59,7 @@ CREATE TABLE stats(
 	`level` INT NOT NULL,
 	id_character INT UNSIGNED NOT NULL,
 	FOREIGN KEY (id_character) REFERENCES characters(id_character)
+	ON DELETE CASCADE
 );
 INSERT INTO stats
 (intel,strength,charisma,`level`,id_character) 
@@ -85,6 +87,7 @@ CREATE TABLE items(
     description TEXT,
     id_item_type INT UNSIGNED NOT NULL,
 	FOREIGN KEY (id_item_type) REFERENCES items_types(id_item_type)
+	ON DELETE RESTRiCT
 );
 
 /* Inserts de datos */
@@ -102,8 +105,10 @@ CREATE TABLE characters_items (
     id_character_item INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_character INT UNSIGNED NOT NULL,
     id_item INT UNSIGNED NOT NULL,
-	FOREIGN KEY (id_character) REFERENCES characters(id_character),
+	FOREIGN KEY (id_character) REFERENCES characters(id_character)
+	ON DELETE CASCADE,
 	FOREIGN KEY (id_item) REFERENCES items(id_item)
+	ON DELETE CASCADE
 );
 INSERT INTO characters_items (id_character,id_item) 
 VALUES (1,1),(1,3),(1,4),(2,1),(3,2);
@@ -126,6 +131,7 @@ CREATE TABLE weapons(
     `range` INT NOT NULL,
     id_weapon_type INT UNSIGNED NOT NULL,
 	FOREIGN KEY (id_weapon_type) REFERENCES weapons_types(id_weapon_type)
+	ON DELETE RESTRICT
 );
 INSERT INTO weapons(weapon, damage, quality, rarity, weight, durability, `range`, id_weapon_type)
 VALUES('Espada larga',200,30,10,10,500,100,1),
@@ -138,8 +144,10 @@ CREATE TABLE characters_weapons(
 	id_character_weapon INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_character INT UNSIGNED NOT NULL,
     id_weapon INT UNSIGNED NOT NULL,
-	FOREIGN KEY (id_character) REFERENCES characters(id_character),
+	FOREIGN KEY (id_character) REFERENCES characters(id_character)
+	ON DELETE CASCADE,
 	FOREIGN KEY (id_weapon) REFERENCES weapons(id_weapon)
+	ON DELETE CASCADE
 );
 INSERT INTO characters_weapons (id_character,id_weapon) 
 VALUES (1,3), (2,2), (3,4), (4,3);	
@@ -162,13 +170,16 @@ CREATE TABLE armours(
     toughness INT NOT NULL,
     id_armour_type INT UNSIGNED NOT NULL,
 	FOREIGN KEY (id_armour_type) REFERENCES armours_types(id_armour_type)
+	ON DELETE RESTRICT
 );
 
 CREATE TABLE characters_armours(
 	id_character_armour INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_character INT UNSIGNED NOT NULL,
     id_armour INT UNSIGNED NOT NULL,
-	FOREIGN KEY (id_character) REFERENCES characters(id_character),
+	FOREIGN KEY (id_character) REFERENCES characters(id_character)
+	ON DELETE CASCADE,
 	FOREIGN KEY (id_armour) REFERENCES armours(id_armour)
+	ON DELETE CASCADE
 );
 
