@@ -37,6 +37,7 @@ INSERT INTO stats
 VALUES
 (33,22,333,33,1),(1,1,1,1,2),(75,2000,60,70,3),(9999,20,1,10,4)
 
+----------------------------------------------------------------------
 06/11/2020
 --Create table items types en orden
 CREATE TABLE items_types(
@@ -84,6 +85,7 @@ VALUES("Poción de vida", 25, true, true, 0.2, "health_potion.png", "Una poción
 
 INSERT INTO characters_items (id_character,id_item) VALUES (1,1),(1,3),(1,4),(2,1),(3,2)
 
+----------------------------------------------------------------------
 09/11/2020
 --- Saber el tipo de los items
 SELECT * FROM `items`,items_types
@@ -111,6 +113,7 @@ WHERE characters.id_character=characters_items.id_character
 	AND items.id_item = characters_items.id_item
     AND characters.id_character=1
 
+----------------------------------------------------------------------
 16/11/2020
 ---Queries que armors y weapons tiene cada personaje
 CREATE TABLE weapons(
@@ -218,6 +221,7 @@ CREATE TABLE skills(
     icon VARCHAR(16) NOT NULL
 );
 
+----------------------------------------------------------------------
 23/11/2020
 ---ORDER BY
 SELECT * FROM characters ORDER BY name ASC(Por defecto)/ or DESC
@@ -290,16 +294,19 @@ VALUES("Poción de vida", 25, true, true, 0.2, "health_potion.png", "Una poción
 
 INSERT INTO characters_items (id_character,id_item) VALUES (1,1),(1,3),(1,4),(2,1),(3,2);
 
+----------------------------------------------------------------------
 30/11/2020
 ---Toda las tablas seguidas con Foreign Keys
 Archivo amongmeme_tables
 
+----------------------------------------------------------------------
 04/12/2020
 SELECT items.id_item, items.item 
 FROM characters, characters_items, items 
 WHERE characters.id_character=characters_items.id_character AND items.id_item=characters_items.id_item 
 AND characters.id_character=1
 
+----------------------------------------------------------------------
 14/12/2020
 INSERT INTO characters_items (id_character, id_item)
 VALUES (1,1) ,(2,2) ,(3,1) ,(2,2);
@@ -336,6 +343,7 @@ FROM characters_items, items
 WHERE items.id_item=characters_items.id_item
 GROUP BY characters_items.id_item
 
+----------------------------------------------------------------------
 18/12/2020
 ---Joins LEFT JOIN, RIGHT JOIN, INNER JOIN solo son usablesd
 si las tables de donde se recogen los resultados estan relacionadas con Foreign Keys.
@@ -408,6 +416,7 @@ SET @reshulon_xd = 3; Setea la variable a un valor
 Procedure NO retorna valor
 Function SI retorna valor
 
+----------------------------------------------------------------------
 19/01/2021
 DELIMITER ;
 DROP PROCEDURE IF EXISTS getItemNameById;
@@ -446,7 +455,7 @@ DELIMITER ;
 CALL getItemsByCharacterId(1, @iditem, @item, @cost);
 
 SELECT @idtem, @item, @cost;
----------------------------------------------------------
+
 
 DROP PROCEDURE IF EXISTS getItemsByCharacterId;
 DELIMITER $$
@@ -489,6 +498,7 @@ END$$
 
 DELIMITER ;
 
+----------------------------------------------------------------------
 26/01/2021
 ---Procedure Insertitem
 ---id personaje, id item i inserte en la tabla characters_items items
@@ -541,6 +551,8 @@ END$$
 DELIMITER ;
 
 ---Function   pasar una palabra i que retorne el id
+
+----------------------------------------------------------------------
 29/01/2021
 INSERT INTO characters (name)
 VALUES ('Ned Stark');
@@ -548,6 +560,7 @@ INSERT INTO characters_items (id_character, id_item)
 VALUES (5,3);
 DELETE FROM `characters` 
 WHERE id_character=5;
+
 ---Da Error por la foreign Key on RESTRICT
 ---Sentencia ALTER TABLE canviar tabla , Foreign Keys
 DELETE otra vez
@@ -579,6 +592,63 @@ CALL delete_character(6);
 ---Añadir una columna a la tabla stats happines
 ALTER TABLE stats 
 ADD felicidad INT;
---- poner a happines
+--- poner a joy en MySQL , En ORACLE es con RENAME
 ALTER TABLE stats
-RENAME COLUMN felicidad TO joy;
+CHANGE happiness joy INT;
+
+----------------------------------------------------------------------
+02/02/2021
+ALTER TABLE stats
+MODIFY COLUMN happiness INT AFTER `level`;
+--column detras de happiness
+ALTER TABLE stats
+ADD sadness INT AFTER happiness;
+
+---Function que retorne el numero de items que contegan una palabra/fragmento LIKE
+DROP FUNCTION IF EXISTS num_items_by_name;
+DELIMITER $$
+
+CREATE FUNCTION num_items_by_name(in_item VARCHAR(32)) RETURNS INT 
+BEGIN
+	SET @count := 0;
+	SELECT COUNT(item) INTO @count FROM items WHERE item LIKE CONCAT('%', in_item, '%');
+	RETURN @count;
+END$$
+
+DELIMITER ;
+
+---Una tabla de usuarios id, user, name, surname, birthdate, e-mail, password, register_date
+---Diagrama y función
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users(
+	id_user INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	username VARCHAR(16) NOT NULL,
+	name VARCHAR(16) NOT NULL,
+	surname VARCHAR(16) NOT NULL,
+	birthdate DATE NOT NULL,
+	email VARCHAR(32) NOT NULL,
+	password CHAR(32) NOT NULL,
+	register_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
+);
+--Function insert
+DROP FUNCTION IF EXISTS insert_user;
+
+DELIMITER $$
+
+CREATE FUNCTION insert_user(in_username VARCHAR(16),
+			in_name VARCHAR(16),
+			in_surname VARCHAR(16),
+			in_birthdate DATE,
+			in_email VARCHAR(32),
+			in_password VARCHAR(16)
+			) RETURNS INT UNSIGNED
+BEGIN
+	INSERT INTO users (username,name,surname,birthdate,email,password)
+	VALUES (in_username,in_name,in_surname,in_birthdate,in_email,MD5(in_password));
+	RETURN LAST_INSERT_ID();
+END$$
+
+DELIMITER ;
+
+SELECT insert_user('pepe', 'Pepito', 'Grillo', '1994-04-21', 'pepitogrillo@enti.cat','pepito');

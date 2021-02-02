@@ -1,5 +1,5 @@
 /* Tablas de AmongMeme */
-CREATE DATABASE amongmeme2;
+CREATE DATABASE amongmeme;
 
 DROP TABLE IF EXISTS characters_items;
 DROP TABLE IF EXISTS items;
